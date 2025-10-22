@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dual AI Studio</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="branding-title">Dual AI Studio</div>
+          <button id="newChatButton" class="new-chat-button">
+            <span>＋</span>
+            <span>New chat</span>
+          </button>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Modes</div>
+          <nav id="modeSwitcher" class="sidebar-list"></nav>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Saved chats</div>
+          <div id="historyEmpty" class="sidebar-empty">No chats yet. Start a conversation to see it here.</div>
+          <div id="chatHistory" class="sidebar-list history-list"></div>
+        </div>
+
+        <div class="sidebar-section system-card">
+          <div class="sidebar-title">Knowledge</div>
+          <p class="sidebar-note">Load your RAG folder into RAM for faster retrieval.</p>
+          <button id="loadRagButton">Load knowledge into RAM</button>
+          <div id="ragStatus" class="status-panel"></div>
+        </div>
+
+        <div class="sidebar-section system-card">
+          <div class="sidebar-title">System readiness</div>
+          <div id="systemInfo" class="status-panel">Detecting operating system and GPU support…</div>
+          <div id="dependencyList" class="dependency-list"></div>
+        </div>
+      </aside>
+
+      <main class="main-pane">
+        <header class="main-header">
+          <div>
+            <div class="session-row">
+              <span id="sessionBadge" class="session-badge">New session</span>
+            </div>
+            <h1 id="chatModeLabel">Standalone human ↔ AI</h1>
+            <p id="modeSummary" class="mode-summary">Send a single prompt and receive one AI response.</p>
+          </div>
+        </header>
+
+        <section class="config-panel">
+          <details open>
+            <summary>AI configuration</summary>
+            <div class="config-grid">
+              <div class="ai-slot" data-slot="ai1">
+                <header>
+                  <h3>Primary AI</h3>
+                </header>
+                <label>
+                  Name
+                  <input type="text" data-field="name" placeholder="Nova" />
+                </label>
+                <label>
+                  Persona
+                  <textarea data-field="persona" rows="2" placeholder="Warm, concise assistant."></textarea>
+                </label>
+                <label>
+                  Model ID
+                  <input type="text" data-field="model" placeholder="openai/gpt-4o" />
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" data-field="enabled" checked />
+                  <span>Enabled</span>
+                </label>
+              </div>
+
+              <div class="ai-slot" data-slot="ai2">
+                <header>
+                  <h3>Secondary AI</h3>
+                  <button type="button" data-action="mirror-primary">Mirror primary</button>
+                </header>
+                <label>
+                  Name
+                  <input type="text" data-field="name" placeholder="Echo" />
+                </label>
+                <label>
+                  Persona
+                  <textarea data-field="persona" rows="2" placeholder="Analytical strategist."></textarea>
+                </label>
+                <label>
+                  Model ID
+                  <input type="text" data-field="model" placeholder="ollama/llama3" />
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" data-field="enabled" />
+                  <span>Enabled</span>
+                </label>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="chat-section">
+          <div id="chatTranscript" class="chat-transcript"></div>
+          <form id="chatForm" class="chat-input">
+            <textarea id="chatMessage" rows="3" placeholder="Ask anything…"></textarea>
+            <div id="chatActions" class="chat-actions">
+              <button type="submit">Send</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
