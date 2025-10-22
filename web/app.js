@@ -108,6 +108,40 @@ function defaultSlot(slotId) {
   };
 }
 
+function normalizeSlotState(slotId, incoming, fallback = null) {
+  const base = {
+    ...defaultSlot(slotId),
+    ...(fallback && typeof fallback === 'object' ? fallback : {}),
+  };
+  if (!incoming || typeof incoming !== 'object') {
+    return { ...base, slot: slotId };
+  }
+  const normalized = { ...base, slot: slotId };
+  if (typeof incoming.name === 'string') {
+    normalized.name = incoming.name.trim();
+  }
+  if (typeof incoming.persona === 'string') {
+    normalized.persona = incoming.persona.trim();
+  }
+  if (typeof incoming.provider === 'string') {
+    const provider = incoming.provider.trim();
+    normalized.provider = provider.length > 0 ? provider : normalized.provider;
+  }
+  if (typeof incoming.apiKey === 'string') {
+    normalized.apiKey = incoming.apiKey;
+  }
+  if (typeof incoming.baseUrl === 'string') {
+    normalized.baseUrl = incoming.baseUrl.trim();
+  }
+  if (typeof incoming.model === 'string') {
+    normalized.model = incoming.model.trim();
+  }
+  if (typeof incoming.enabled === 'boolean') {
+    normalized.enabled = incoming.enabled;
+  }
+  return normalized;
+}
+
 const state = {
   view: 'options',
   modes: [
@@ -1001,7 +1035,7 @@ function updateProviderUI(slotEl, slotState, options = {}) {
 function collectSlotForm(slotId) {
   const slotEl = slotElement(slotId);
   if (!slotEl) return;
-  const slotState = state.aiSlots[slotId] ? { ...state.aiSlots[slotId] } : defaultSlot(slotId);
+  const slotState = normalizeSlotState(slotId, state.aiSlots[slotId]);
   const nameInput = slotEl.querySelector('[data-field="name"]');
   const personaInput = slotEl.querySelector('[data-field="persona"]');
   const providerSelect = slotEl.querySelector('[data-field="provider"]');
@@ -1033,7 +1067,7 @@ function collectSlotForm(slotId) {
     slotState.model = modelInput ? modelInput.value.trim() : slotState.model;
   }
 
-  state.aiSlots[slotId] = { ...slotState, slot: slotId };
+  state.aiSlots[slotId] = normalizeSlotState(slotId, slotState);
 }
 
 function collectAllSlots() {
@@ -1068,9 +1102,10 @@ function handleSlotChange(event) {
   if (!slotId) return;
   const field = event.target.dataset.field;
   if (field === 'provider') {
-    const slotState = state.aiSlots[slotId] ? { ...state.aiSlots[slotId] } : defaultSlot(slotId);
+    const slotState = normalizeSlotState(slotId, state.aiSlots[slotId]);
     slotState.provider = event.target.value;
-    state.aiSlots[slotId] = updateProviderUI(slotEl, slotState, { reason: 'provider-change' });
+    const updated = updateProviderUI(slotEl, slotState, { reason: 'provider-change' });
+    state.aiSlots[slotId] = normalizeSlotState(slotId, updated);
   } else if (field === 'modelSelect') {
     const provider = getProviderDef((state.aiSlots[slotId] && state.aiSlots[slotId].provider) || 'custom');
     if (event.target.value === CUSTOM_MODEL_OPTION) {
@@ -1086,11 +1121,19 @@ function handleSlotChange(event) {
         }
         modelInput.focus();
       }
+      const slotState = normalizeSlotState(slotId, state.aiSlots[slotId]);
+      if (provider.modelMode === 'list' && provider.models.some(model => model.id === slotState.model)) {
+        slotState.model = '';
+      }
+      state.aiSlots[slotId] = normalizeSlotState(slotId, slotState);
     } else {
       const inputGroup = slotEl.querySelector('[data-field-group="modelInput"]');
       if (inputGroup && provider.modelMode === 'list') {
         inputGroup.classList.add('is-hidden');
       }
+      const slotState = normalizeSlotState(slotId, state.aiSlots[slotId]);
+      slotState.model = event.target.value;
+      state.aiSlots[slotId] = normalizeSlotState(slotId, slotState);
     }
   }
   collectSlotForm(slotId);
@@ -1108,8 +1151,8 @@ function applyConfig(config) {
   if (!config || !config.aiSlots) return;
   const incoming = config.aiSlots;
   state.aiSlots = {
-    ai1: { ...state.aiSlots.ai1, ...(incoming.ai1 || incoming['ai1'] || {}) },
-    ai2: { ...state.aiSlots.ai2, ...(incoming.ai2 || incoming['ai2'] || {}) },
+    ai1: normalizeSlotState('ai1', incoming.ai1 || incoming['ai1'], state.aiSlots.ai1),
+    ai2: normalizeSlotState('ai2', incoming.ai2 || incoming['ai2'], state.aiSlots.ai2),
   };
   state.configSavedAt = config.savedAt || config.saved_at || null;
   const audioConfig = config.audio || {};
