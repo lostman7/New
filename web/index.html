@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dual AI Studio</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="branding-title">Dual AI Studio</div>
+          <button id="newChatButton" class="new-chat-button">
+            <span>＋</span>
+            <span>New chat</span>
+          </button>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Workspace</div>
+          <button id="openOptionsButton" class="sidebar-item sidebar-item--options">
+            <span>⚙️ Options &amp; AI setup</span>
+          </button>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Modes</div>
+          <nav id="modeSwitcher" class="sidebar-list"></nav>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Saved chats</div>
+          <div id="historyEmpty" class="sidebar-empty">No chats yet. Start a conversation to see it here.</div>
+          <div id="chatHistory" class="sidebar-list history-list"></div>
+        </div>
+
+        <div class="sidebar-section system-card">
+          <details id="knowledgeDetails" open>
+            <summary>Knowledge</summary>
+            <p class="sidebar-note">Load your RAG folder into RAM for faster retrieval.</p>
+            <button id="loadRagButton">Load knowledge into RAM</button>
+            <div id="ragStatus" class="status-panel"></div>
+          </details>
+        </div>
+
+        <div class="sidebar-section system-card">
+          <details id="systemDetails" open>
+            <summary>System readiness</summary>
+            <div id="systemInfo" class="status-panel">Detecting operating system and GPU support…</div>
+            <div id="dependencyList" class="dependency-list"></div>
+          </details>
+        </div>
+
+        <div class="sidebar-section system-card">
+          <details id="optionsDetails" open>
+            <summary>Options</summary>
+            <p class="sidebar-note">Configure API keys, endpoints, and model preferences.</p>
+            <button id="openOptionsFromCard" class="sidebar-item sidebar-item--inline">Open options</button>
+            <div id="configStatus" class="status-panel status-panel--compact">Configuration not saved yet.</div>
+          </details>
+        </div>
+      </aside>
+
+      <main class="main-pane">
+        <header class="main-header">
+          <div id="chatHeader" class="header-view">
+            <div class="session-row">
+              <span id="sessionBadge" class="session-badge">New session</span>
+              <button id="headerOptionsButton" class="ghost-button">⚙️ Options</button>
+            </div>
+            <h1 id="chatModeLabel">Standalone human ↔ AI</h1>
+            <p id="modeSummary" class="mode-summary">Send a single prompt and receive one AI response.</p>
+          </div>
+          <div id="optionsHeader" class="header-view is-hidden">
+            <h1>Configure your AI studio</h1>
+            <p class="mode-summary">Select providers, enter API keys, and choose models before you start chatting.</p>
+            <div class="header-actions">
+              <button id="beginChatButton" class="primary-button">Go to chat workspace</button>
+            </div>
+          </div>
+        </header>
+
+        <section id="optionsView" class="options-view">
+          <form id="optionsForm">
+            <div class="options-grid">
+              <div class="option-slot" data-slot="ai1">
+                <header>
+                  <h3>Primary AI</h3>
+                  <span class="slot-label">Slot A</span>
+                </header>
+                <label>
+                  Friendly name
+                  <input type="text" data-field="name" placeholder="Nova" autocomplete="off" />
+                </label>
+                <label>
+                  Persona
+                  <textarea data-field="persona" rows="3" placeholder="Warm, concise assistant."></textarea>
+                </label>
+                <label>
+                  Provider
+                  <select data-field="provider"></select>
+                </label>
+                <div class="field-group" data-field-group="providerNote"></div>
+                <div class="field-group" data-field-group="apiKey">
+                  <label>
+                    API key
+                    <input type="password" data-field="apiKey" placeholder="sk-..." autocomplete="off" />
+                  </label>
+                </div>
+                <div class="field-group" data-field-group="baseUrl">
+                  <label>
+                    Endpoint URL
+                    <input type="text" data-field="baseUrl" placeholder="https://api.openai.com/v1" />
+                  </label>
+                </div>
+                <div class="field-group" data-field-group="modelSelect">
+                  <label>
+                    Model
+                    <select data-field="modelSelect"></select>
+                  </label>
+                </div>
+                <div class="field-group" data-field-group="modelInput">
+                  <label>
+                    Model ID
+                    <input type="text" data-field="model" placeholder="Enter model identifier" />
+                  </label>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" data-field="enabled" />
+                  <span>Enabled</span>
+                </label>
+              </div>
+
+              <div class="option-slot" data-slot="ai2">
+                <header>
+                  <h3>Secondary AI</h3>
+                  <span class="slot-label">Slot B</span>
+                </header>
+                <label>
+                  Friendly name
+                  <input type="text" data-field="name" placeholder="Echo" autocomplete="off" />
+                </label>
+                <label>
+                  Persona
+                  <textarea data-field="persona" rows="3" placeholder="Analytical strategist."></textarea>
+                </label>
+                <label>
+                  Provider
+                  <select data-field="provider"></select>
+                </label>
+                <div class="field-group" data-field-group="providerNote"></div>
+                <div class="field-group" data-field-group="apiKey">
+                  <label>
+                    API key
+                    <input type="password" data-field="apiKey" placeholder="sk-..." autocomplete="off" />
+                  </label>
+                </div>
+                <div class="field-group" data-field-group="baseUrl">
+                  <label>
+                    Endpoint URL
+                    <input type="text" data-field="baseUrl" placeholder="http://localhost:11434/v1" />
+                  </label>
+                </div>
+                <div class="field-group" data-field-group="modelSelect">
+                  <label>
+                    Model
+                    <select data-field="modelSelect"></select>
+                  </label>
+                </div>
+                <div class="field-group" data-field-group="modelInput">
+                  <label>
+                    Model ID
+                    <input type="text" data-field="model" placeholder="Enter model identifier" />
+                  </label>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" data-field="enabled" />
+                  <span>Enabled</span>
+                </label>
+              </div>
+            </div>
+            <div class="options-actions">
+              <button type="submit" class="primary-button">Save configuration</button>
+              <button type="button" id="resetOptionsButton" class="ghost-button">Reset from saved</button>
+            </div>
+          </form>
+          <section class="audio-options">
+            <h2>Audio &amp; voice</h2>
+            <p class="options-note" id="voiceHelp">Dual AI Studio uses the built-in Web Speech features in your browser for playback and dictation.</p>
+            <label class="audio-field">
+              Preferred voice for read aloud
+              <select id="voicePreference"></select>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="autoReadToggle" />
+              <span>Automatically read the first AI reply after each message</span>
+            </label>
+          </section>
+        </section>
+
+        <section id="chatWorkspace" class="chat-section is-hidden">
+          <div id="chatTranscript" class="chat-transcript"></div>
+          <form id="chatForm" class="chat-input">
+            <textarea id="chatMessage" rows="3" placeholder="Ask anything…"></textarea>
+            <div id="chatActions" class="chat-actions">
+              <div class="voice-controls">
+                <button type="button" id="voiceInputButton" class="ghost-button" title="Capture speech as text">🎤 Talk</button>
+                <button type="button" id="voiceStopButton" class="ghost-button is-hidden" title="Stop listening">⏹ Stop</button>
+                <div id="voiceStatus" class="voice-status" aria-live="polite"></div>
+              </div>
+              <button type="submit">Send</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

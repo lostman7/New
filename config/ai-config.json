@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "savedAt": null,
+  "aiSlots": {
+    "ai1": {
+      "slot": "ai1",
+      "name": "Nova",
+      "persona": "Supportive navigator.",
+      "provider": "openai",
+      "apiKey": "",
+      "baseUrl": "https://api.openai.com/v1",
+      "model": "gpt-4o-mini",
+      "enabled": true
+    },
+    "ai2": {
+      "slot": "ai2",
+      "name": "Echo",
+      "persona": "Analytical strategist.",
+      "provider": "ollama",
+      "apiKey": "",
+      "baseUrl": "http://localhost:11434/v1",
+      "model": "llama3",
+      "enabled": false
+    }
+  },
+  "audio": {
+    "preferredVoice": null,
+    "autoReadResponses": false
+  }
+}
