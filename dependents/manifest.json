@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "generated": "2024-07-01",
+  "common": {
+    "runtimes": [
+      {
+        "name": "Node.js 18+",
+        "url": "https://nodejs.org/en/download",
+        "description": "Required to run the orchestration server and build tooling."
+      },
+      {
+        "name": "Python 3.10+ (optional)",
+        "url": "https://www.python.org/downloads/",
+        "description": "Recommended for advanced RAG pipelines or custom tooling."
+      }
+    ],
+    "tools": [
+      {
+        "name": "Git",
+        "url": "https://git-scm.com/downloads",
+        "description": "Source control, dependency syncing, and collaborative workflows."
+      }
+    ]
+  },
+  "platforms": {
+    "win32": {
+      "label": "Windows",
+      "runtimes": [
+        {
+          "name": "Visual C++ Redistributable 2015-2022",
+          "url": "https://aka.ms/vs/17/release/vc_redist.x64.exe",
+          "description": "Ensures native Node/Python extensions load correctly."
+        }
+      ],
+      "gpus": {
+        "nvidia": [
+          {
+            "name": "NVIDIA CUDA Toolkit",
+            "url": "https://developer.nvidia.com/cuda-downloads",
+            "description": "Install matching CUDA + cuDNN for GPU accelerated inference."
+          }
+        ],
+        "amd": [
+          {
+            "name": "AMD ROCm Windows Preview",
+            "url": "https://www.amd.com/en/developer/resources/rocm-hub.html",
+            "description": "ROCm stack for running AMD-optimized inference workloads."
+          }
+        ],
+        "intel": [
+          {
+            "name": "Intel oneAPI Base Toolkit",
+            "url": "https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html",
+            "description": "DPC++ runtimes enabling Intel GPU acceleration."
+          }
+        ]
+      }
+    },
+    "linux": {
+      "label": "Linux",
+      "runtimes": [
+        {
+          "name": "Build Essentials",
+          "url": "https://gcc.gnu.org/",
+          "description": "Install gcc/g++/make (e.g., apt install build-essential) for native modules."
+        }
+      ],
+      "gpus": {
+        "nvidia": [
+          {
+            "name": "NVIDIA Driver & CUDA",
+            "url": "https://developer.nvidia.com/cuda-downloads",
+            "description": "Use distribution packages or NVIDIA runfiles to enable CUDA acceleration."
+          }
+        ],
+        "amd": [
+          {
+            "name": "AMD ROCm",
+            "url": "https://rocm.docs.amd.com/en/latest/how_to/install_ubuntu.html",
+            "description": "Follow distro-specific ROCm install guides for GPU support."
+          }
+        ],
+        "intel": [
+          {
+            "name": "Intel GPU Drivers + Level Zero",
+            "url": "https://dgpu-docs.intel.com/driver/installation.html",
+            "description": "Install latest Intel GPU drivers and oneAPI runtime for Xe devices."
+          }
+        ]
+      }
+    },
+    "darwin": {
+      "label": "macOS",
+      "runtimes": [
+        {
+          "name": "Command Line Tools",
+          "url": "https://developer.apple.com/download/all/",
+          "description": "Install Xcode Command Line Tools for compilation support (xcode-select --install)."
+        }
+      ],
+      "gpus": {
+        "apple": [
+          {
+            "name": "Metal Performance Shaders",
+            "url": "https://developer.apple.com/metal/",
+            "description": "Included with macOS; ensure you are on the latest macOS release for best Metal support."
+          }
+        ],
+        "intel": [
+          {
+            "name": "Intel Graphics Update for macOS (legacy)",
+            "url": "https://www.intel.com/content/www/us/en/download/19347/intel-graphics-media-accelerator-driver-for-mac.html",
+            "description": "Only required for legacy Intel-based Macs using OpenCL inference."
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+This is a sample knowledge base entry describing how the dual AI studio stores reference materials entirely in RAM. The knowledge snippets are lightweight, enabling quick retrieval without disk IO.
